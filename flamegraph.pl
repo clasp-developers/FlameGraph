@@ -368,6 +368,26 @@ sub color {
 	}
 
 	# multi palettes
+	if (defined $type and $type eq "clasp") {
+		# Handle both annotations (_[j], _[i], ...; which are
+		# accurate), as well as input that lacks any annotations, as
+		# best as possible. Without annotations, we get a little hacky
+		# and match on java|org|com, etc.
+            if ($name =~  /::/) {	# C++
+                $type = "green";
+            } elsif ($name =~ m/^`GC_/) {  # GC
+                $type = "red";
+            } elsif ($name =~ m:\^\^$:) {	# Common Lisp
+                $type = "aqua";
+            } elsif ($name =~ m:\^:) {	# More Lisp
+                $type = "aqua";
+            } elsif ($name =~ m:_\[k\]$:) {	# kernel annotation
+                $type = "orange";
+            } else {			# system
+                $type = "yellow";
+            }
+            # fall-through to color palettes
+	}
 	if (defined $type and $type eq "java") {
 		# Handle both annotations (_[j], _[i], ...; which are
 		# accurate), as well as input that lacks any annotations, as
